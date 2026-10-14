@@ -18,9 +18,25 @@ h1{
     padding:16px;
 }
 .panel{
+    display:flex;
+    flex-direction:column;
     background: white;
     border-radius:8px;
     padding:14px;
+    gap:8px;
+    justify-content:center;
+}
+.form-buttons{
+    display:flex;
+    flex-wrap: wrap;
+    gap:8px;
+}
+.form-buttons button{
+    flex:1 1 120px;
+}
+input{
+    padding:6px;
+    font-size:14px;
 }
 input:focus {
     border-color: #3b6e4f;
@@ -29,7 +45,7 @@ button {
     background: #3b6e4f;
     color:white;
     border-radius:6px;
-    padding:10px 14px;
+    padding:10px 15px;
 }
 button:hover{
     background:#2f5a40;
