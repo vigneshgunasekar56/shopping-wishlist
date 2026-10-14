@@ -50,3 +50,40 @@ button {
 button:hover{
     background:#2f5a40;
 }
+.item-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.item-card {
+  background: white;
+  border-radius: 10px;
+  padding: 16px;
+}
+
+.item-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  margin-top: 10px;
+}
+
+.item-name {
+  font-weight: 600;
+}
+
+.item-price {
+  font-weight: 700;
+}
+
+.bought-label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.bought-check {
+  cursor: pointer;
+}

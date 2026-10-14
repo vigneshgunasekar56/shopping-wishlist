@@ -11,7 +11,7 @@ function addItem(name, price, note) {
     name: name,
     price: price,
     note: note,
-    bought: false
+    bought: false,
   };
 
   state.push(item);
@@ -23,8 +23,10 @@ function formatMoney(amount) {
 
 function renderTotals() {
   const cost = state.reduce((total, item) => total + item.price, 0);
-
   const totals = document.querySelector("#totals");
+
+  if (!totals) return;
+
   totals.innerHTML = "";
 
   const itemsBox = document.createElement("div");
@@ -49,6 +51,43 @@ function render() {
   renderList();
 }
 
+function createBoughtCheckbox(item) {
+  const label = document.createElement("label");
+  label.className = "bought-label";
+
+  const input = document.createElement("input");
+  input.type = "checkbox";
+  input.className = "bought-check";
+  input.checked = item.bought;
+
+  label.append(input, "Bought");
+
+  return label;
+}
+
+function createItemCard(item) {
+  const card = document.createElement("div");
+  card.className = "item-card";
+
+  card.append(createBoughtCheckbox(item));
+
+  const top = document.createElement("div");
+  top.className = "item-top";
+
+  const name = document.createElement("span");
+  name.className = "item-name";
+  name.textContent = item.name;
+
+  const price = document.createElement("span");
+  price.className = "item-price";
+  price.textContent = formatMoney(item.price);
+
+  top.append(name, price);
+  card.append(top);
+
+  return card;
+}
+
 function renderList() {
   const list = document.querySelector("#item-list");
   list.innerHTML = "";
@@ -60,6 +99,10 @@ function renderList() {
     list.appendChild(empty);
     return;
   }
+
+  state.forEach(function (item) {
+    list.append(createItemCard(item));
+  });
 }
 
 function handleFormSubmit(event) {
@@ -85,9 +128,7 @@ function handleFormSubmit(event) {
 }
 
 function setUpEvents() {
-  document
-    .getElementById("add-form")
-    .addEventListener("submit", handleFormSubmit);
+  document.getElementById("add-form").addEventListener("submit", handleFormSubmit);
 }
 
 function startApp() {
