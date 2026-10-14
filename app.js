@@ -1,4 +1,21 @@
 // Your code goes here
+const state=[];
+
+function makeId() {
+    return crypto.randomUUID();
+}
+
+function addItem(name, price, note) {
+  const item = {
+    id: makeId(),
+    name: name,
+    price: price,
+    note: note,
+    bought: false
+  };
+
+  state.push(item);
+}
 
 function renderList() {
     const list = document.querySelector("#item-list");
@@ -23,6 +40,13 @@ function handleFormSubmit(event) {
   }
 
   console.log(name, price);
+
+  addItem(name, price, "");
+
+  console.log(state);
+
+  document.getElementById("name-input").value = "";
+  document.getElementById("price-input").value = "";
 }
 
 function setUpEvents() {
