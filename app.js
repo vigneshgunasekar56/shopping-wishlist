@@ -1,8 +1,8 @@
 // Your code goes here
-const state=[];
+const state = [];
 
 function makeId() {
-    return crypto.randomUUID();
+  return crypto.randomUUID();
 }
 
 function addItem(name, price, note) {
@@ -17,17 +17,50 @@ function addItem(name, price, note) {
   state.push(item);
 }
 
-function renderList() {
-    const list = document.querySelector("#item-list");
-    list.innerHTML = "";
-    
-    const empty=document.createElement("p");
-    empty.className="empty-message";
-    empty.textContent = "Your wishlist is empty. Add something you want!";
-    list.appendChild(empty);
+function formatMoney(amount) {
+  return "₹" + amount.toFixed(2);
 }
 
-//handleformsubmit prevents the empty form submission and saves the data in the form.
+function renderTotals() {
+  const cost = state.reduce((total, item) => total + item.price, 0);
+
+  const totals = document.querySelector("#totals");
+  totals.innerHTML = "";
+
+  const itemsBox = document.createElement("div");
+  itemsBox.className = "total-box";
+  itemsBox.innerHTML = `
+    <span>Items left</span>
+    <strong>${state.length}</strong>
+  `;
+
+  const costBox = document.createElement("div");
+  costBox.className = "total-box";
+  costBox.innerHTML = `
+    <span>Still to spend</span>
+    <strong>${formatMoney(cost)}</strong>
+  `;
+
+  totals.append(itemsBox, costBox);
+}
+
+function render() {
+  renderTotals();
+  renderList();
+}
+
+function renderList() {
+  const list = document.querySelector("#item-list");
+  list.innerHTML = "";
+
+  if (state.length === 0) {
+    const empty = document.createElement("p");
+    empty.className = "empty-message";
+    empty.textContent = "Your wishlist is empty. Add something you want!";
+    list.appendChild(empty);
+    return;
+  }
+}
 
 function handleFormSubmit(event) {
   event.preventDefault();
@@ -43,6 +76,8 @@ function handleFormSubmit(event) {
 
   addItem(name, price, "");
 
+  render();
+
   console.log(state);
 
   document.getElementById("name-input").value = "";
@@ -50,12 +85,14 @@ function handleFormSubmit(event) {
 }
 
 function setUpEvents() {
-    document.getElementById("add-form").addEventListener("submit", handleFormSubmit);
+  document
+    .getElementById("add-form")
+    .addEventListener("submit", handleFormSubmit);
 }
 
 function startApp() {
-    renderList();
-    setUpEvents();
+  render();
+  setUpEvents();
 }
 
 startApp();
