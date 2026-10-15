@@ -1,8 +1,23 @@
 // Your code goes here
-const state = [];
+let state = [];
+const STORAGE_KEY = "wishlistLockerItems";
 
 function makeId() {
   return crypto.randomUUID();
+}
+
+function saveState() {
+  const text = JSON.stringify(state);
+  localStorage.setItem(STORAGE_KEY, text);
+}
+
+function loadState() {
+  const text = localStorage.getItem(STORAGE_KEY);
+
+  if (text) {
+    const savedItems = JSON.parse(text);
+    state.push(...savedItems);
+  }
 }
 
 function addItem(name, price, note) {
@@ -15,6 +30,16 @@ function addItem(name, price, note) {
   };
 
   state.push(item);
+  saveState();
+}
+
+function toggleBought(id) {
+  const item = state.find((item) => item.id === id);
+
+  if (!item) return;
+
+  item.bought = !item.bought;
+  saveState();
 }
 
 function formatMoney(amount) {
@@ -22,9 +47,10 @@ function formatMoney(amount) {
 }
 
 function renderTotals() {
-  const cost = state.reduce((total, item) => total + item.price, 0);
-  const totals = document.querySelector("#totals");
+  const left = state.filter((item) => !item.bought);
+  const cost = left.reduce((total, item) => total + item.price, 0);
 
+  const totals = document.querySelector("#totals");
   if (!totals) return;
 
   totals.innerHTML = "";
@@ -33,7 +59,7 @@ function renderTotals() {
   itemsBox.className = "total-box";
   itemsBox.innerHTML = `
     <span>Items left</span>
-    <strong>${state.length}</strong>
+    <strong>${left.length}</strong>
   `;
 
   const costBox = document.createElement("div");
@@ -59,6 +85,11 @@ function createBoughtCheckbox(item) {
   input.type = "checkbox";
   input.className = "bought-check";
   input.checked = item.bought;
+
+  input.addEventListener("change", function () {
+    toggleBought(item.id);
+    render();
+  });
 
   label.append(input, "Bought");
 
@@ -132,6 +163,7 @@ function setUpEvents() {
 }
 
 function startApp() {
+  loadState();
   render();
   setUpEvents();
 }

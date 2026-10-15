@@ -87,3 +87,13 @@ button:hover{
 .bought-check {
   cursor: pointer;
 }
+
+.item-card.bought {
+  opacity: 0.6;
+  border-left: 4px solid grey;
+}
+
+.item-card.bought .item-name,
+.item-card.bought .item-price {
+  text-decoration: line-through;
+}
