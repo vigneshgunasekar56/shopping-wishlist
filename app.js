@@ -1,5 +1,6 @@
 // Your code goes here
 let state = [];
+let editingId=null;
 const STORAGE_KEY = "wishlistLockerItems";
 
 function makeId() {
@@ -31,6 +32,34 @@ function addItem(name, price, note) {
 
   state.push(item);
   saveState();
+}
+
+function updateItem(id, name, price, note) {
+  const item = state.find(item => item.id === id);
+
+  if (!item) return;
+
+  item.name = name;
+  item.price = price;
+  item.note = note;
+
+  saveState();
+}
+
+function createActionRow(item) {
+  const actions = document.createElement("div");
+  actions.className = "item-actions";
+
+  const editButton = document.createElement("button");
+  editButton.textContent = "Edit";
+  editButton.type = "button";
+
+  editButton.addEventListener("click", function () {
+    startEditing(item.id);
+  });
+
+  actions.append(editButton);
+  return actions;
 }
 
 function toggleBought(id) {
@@ -116,7 +145,31 @@ function createItemCard(item) {
   top.append(name, price);
   card.append(top);
 
+  card.append(createActionRow(item));
   return card;
+}
+
+function startEditing(id) {
+  const item = state.find(item => item.id === id);
+  if (!item) return;
+
+  editingId = id;
+
+  document.querySelector("#name-input").value = item.name;
+  document.querySelector("#price-input").value = item.price;
+  document.querySelector("#form-title").textContent = "Edit item";
+  document.querySelector("#submit-button").textContent = "Save changes";
+  document.querySelector("#cancel-button").classList.remove("hidden");
+  document.querySelector("#name-input").focus();
+}
+
+function stopEditing() {
+  editingId = null;
+
+  document.querySelector("#add-form").reset();
+  document.querySelector("#form-title").textContent = "Add an item";
+  document.querySelector("#submit-button").textContent = "Add to list";
+  document.querySelector("#cancel-button").classList.add("hidden");
 }
 
 function renderList() {
@@ -142,24 +195,31 @@ function handleFormSubmit(event) {
   const name = document.getElementById("name-input").value.trim();
   const price = parseFloat(document.getElementById("price-input").value);
 
-  if (name === "" || isNaN(price)) {
-    return;
-  }
+ if (editingId !== null) {
+  const item = state.find(item => item.id === editingId);
 
-  console.log(name, price);
+  if (!item) return;
 
+  const note = item.note;
+  updateItem(editingId, name, price, note);
+  stopEditing();
+} else {
   addItem(name, price, "");
+  document.querySelector("#add-form").reset();
+}
 
-  render();
-
-  console.log(state);
-
-  document.getElementById("name-input").value = "";
-  document.getElementById("price-input").value = "";
+render();
+console.log(state);
 }
 
 function setUpEvents() {
-  document.getElementById("add-form").addEventListener("submit", handleFormSubmit);
+  document
+    .querySelector("#add-form")
+    .addEventListener("submit", handleFormSubmit);
+
+  document
+    .querySelector("#cancel-button")
+    .addEventListener("click", stopEditing);
 }
 
 function startApp() {
