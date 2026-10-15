@@ -142,3 +142,10 @@ button:hover {
   flex-direction: row;
   gap: 8px;
 }
+.delete-button {
+  background: #a83232;
+}
+
+.delete-button:hover {
+  background: #842626;
+}

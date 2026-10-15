@@ -58,18 +58,25 @@ function createActionRow(item) {
     startEditing(item.id);
   });
 
-  actions.append(editButton);
+  const deleteButton = document.createElement("button");
+  deleteButton.textContent = "Delete";
+  deleteButton.type = "button";
+  deleteButton.className = "delete-button";
+
+  deleteButton.addEventListener("click", function () {
+    deleteItem(item.id);
+
+    if (editingId === item.id) {
+      stopEditing();
+    }
+
+    render();
+  });
+
+  actions.append(editButton, deleteButton);
   return actions;
 }
 
-function toggleBought(id) {
-  const item = state.find((item) => item.id === id);
-
-  if (!item) return;
-
-  item.bought = !item.bought;
-  saveState();
-}
 
 function formatMoney(amount) {
   return "₹" + amount.toFixed(2);
@@ -170,6 +177,11 @@ function stopEditing() {
   document.querySelector("#form-title").textContent = "Add an item";
   document.querySelector("#submit-button").textContent = "Add to list";
   document.querySelector("#cancel-button").classList.add("hidden");
+}
+
+function deleteItem(id) {
+  state = state.filter(item => item.id !== id);
+  saveState();
 }
 
 function renderList() {

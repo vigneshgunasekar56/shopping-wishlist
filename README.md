@@ -20,3 +20,11 @@ and whether you have achieved your target.
  Features to add on later
     1. Local Storage to API
     2. Connecting to real database
+    
+    ## What the app does
+
+This wishlist app helps me keep track of things I want to buy, such as football boots or movie tickets. I can add items with their names and prices, edit details, mark items as bought, and delete items I no longer want. The totals show how many items remain and how much they will cost.
+
+## How it works
+
+When I add an item, it appears as a card showing its name, price, and Bought checkbox. Editing lets me change the item's name and price. When I tick Bought, the item is marked as completed and the remaining totals update. When I delete an item, its card disappears and the totals update, with the change saved for the next time I open the app.
