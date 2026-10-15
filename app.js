@@ -1,4 +1,6 @@
 // Your code goes here
+import formatMoney from "./formatMoney.js";
+
 let state = [];
 let editingId=null;
 const STORAGE_KEY = "wishlistLockerItems";
@@ -77,10 +79,18 @@ function createActionRow(item) {
   return actions;
 }
 
+function toggleBought(id) {
+  const item = state.find(item => item.id === id);
 
-function formatMoney(amount) {
-  return "₹" + amount.toFixed(2);
+  if (!item) return;
+
+  item.bought = !item.bought;
+  saveState();
+  render();
 }
+
+
+
 
 function renderTotals() {
   const left = state.filter((item) => !item.bought);
@@ -122,10 +132,9 @@ function createBoughtCheckbox(item) {
   input.className = "bought-check";
   input.checked = item.bought;
 
-  input.addEventListener("change", function () {
-    toggleBought(item.id);
-    render();
-  });
+ input.addEventListener("change", function () {
+  toggleBought(item.id);
+});
 
   label.append(input, "Bought");
 
@@ -134,7 +143,7 @@ function createBoughtCheckbox(item) {
 
 function createItemCard(item) {
   const card = document.createElement("div");
-  card.className = "item-card";
+  card.className = item.bought ? "item-card bought" : "item-card";
 
   card.append(createBoughtCheckbox(item));
 
